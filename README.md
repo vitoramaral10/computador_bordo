@@ -1,6 +1,6 @@
 # computador_bordo
 
-READ ODB2 with ELM 327 car data.
+Read car data in ODB2 port with ELM 327.
 
 Features
 - Coolant Temp
