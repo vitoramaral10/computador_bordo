@@ -15,10 +15,9 @@ void Library::connectionOled(String text, int16_t imageWidth, int16_t imageHeigh
   Heltec.display->display();
 }
 
-void Library::displayProgressBar(float maximum, float value, String prefix, String suffix)
-{
+void Library::displayProgressBar(float maximum, float value, String prefix, String suffix, int16_t imageWidth, int16_t imageHeight, const uint8_t *imageBits, bool integer){
     String v = "";
-    if (value == int(value))
+    if (integer == true)
     {
         v = int(value);
     }
@@ -42,7 +41,7 @@ void Library::displayProgressBar(float maximum, float value, String prefix, Stri
 
     Heltec.display->setFont(ArialMT_Plain_24);
     Heltec.display->setTextAlignment(TEXT_ALIGN_CENTER);
-    Heltec.display->drawXbm(0, 10, coolant_width, coolant_height, coolant_bits);
+    Heltec.display->drawXbm(0, 10, imageWidth, imageHeight, imageBits);
     Heltec.display->drawString(70, 10, info);
     Heltec.display->drawProgressBar(0, 48, 127, 15, (value * 100) / maximum);
     Heltec.display->display();
