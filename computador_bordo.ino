@@ -19,7 +19,7 @@ void setup()
 {
   Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Disable*/, true /*Serial Enable*/);
   pinMode(0, INPUT);
-
+  SerialBT.setPin("1234");
   ELM_PORT.begin("ArduHUD", true);
 
   connectOBD();
