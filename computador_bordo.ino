@@ -38,14 +38,14 @@ void setup()
 
   util.connectionOled("CONNECTING...", engine_width, engine_height, engine_bits);
 
-  if (!myELM327.begin(ELM_PORT, true, 2000))
+  if (!myELM327.begin(ELM_PORT, false, 2000))
   {
     util.connectionOled("NOT CONNECTED", engine_width, engine_height, engine_bits);
     while (1)
       ;
   }
 
-  util.connectionOled("NOT CONNECTED", engine_width, engine_height, engine_bits);
+  util.connectionOled("CONNECTED", engine_width, engine_height, engine_bits);
   delay(3000);
 }
 
