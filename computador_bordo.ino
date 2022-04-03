@@ -6,21 +6,21 @@
 
 BluetoothSerial SerialBT;
 #define ELM_PORT SerialBT
-#define DEBUG_PORT Serial
-#define oled Heltec.display
 
-int button_state;
+int buttonPin = 0;
+int ledPin = 25;
+int buttonState = 0;
+int menu = 0;
 
 ELM327 myELM327;
-
-uint32_t coolant = 0;
 
 Library util(0);
 
 void setup()
 {
   Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Disable*/, true /*Serial Enable*/);
-  pinMode(0, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT);
   // SerialBT.setPin("1234");
   ELM_PORT.begin("ArduHUD", true);
 
@@ -51,14 +51,48 @@ void setup()
 
 void loop()
 {
-  coolant = (uint32_t)myELM327.engineCoolantTemp();
+  menuControl();
+
   if (myELM327.nb_rx_state == ELM_SUCCESS)
   {
-    util.displayProgressBar(100, coolant, "", " °C");
+    switch (menu)
+    {
+    case 0:
+      util.displayProgressBar(100, myELM327.engineCoolantTemp(), "", " °C");
+      break;
+    case 1:
+      util.displayProgressBar(15, myELM327.batteryVoltage(), "", " V");
+      break;
+    default:
+      Heltec.display->clear();
+      Heltec.display->setFont(ArialMT_Plain_24);
+      Heltec.display->setTextAlignment(TEXT_ALIGN_CENTER);
+      Heltec.display->drawString(70, 10, "ERRO");
+      Heltec.display->display();
+      break;
+    }
   }
   else if (myELM327.nb_rx_state != ELM_GETTING_MSG)
   {
     util.connectionOled("ELM Disconnected", disconnected_width, disconnected_height, disconnected_bits);
     myELM327.printError();
+  }
+}
+
+void menuControl()
+{
+  buttonState = digitalRead(buttonPin);
+
+  if (buttonState == LOW)
+  {
+    if (menu < 1)
+    {
+      menu++;
+    }
+    else
+    {
+      menu--;
+    }
+    delay(300);
   }
 }
